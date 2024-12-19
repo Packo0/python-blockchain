@@ -1,8 +1,8 @@
-blockchain = [1]
+blockchain = [[1]]
 
 
 def add_value():
-    blockchain.append([blockchain[0], 5.3])
+    blockchain.append([blockchain[-1], 5.3])
     print(blockchain)
 
 
