@@ -1,7 +1,12 @@
 # Initializing our blockchain list
-blockchain = []
+genesis_block = {
+    "previous_hash": "",
+    "index": 0,
+    "transactions": [],
+}
+blockchain = [genesis_block]
 open_transactions = []
-owner = 'Sender name'
+owner = "Sender name"
 
 
 def get_last_blockchain_value():
@@ -14,7 +19,7 @@ def get_last_blockchain_value():
 # This function accepts two arguments.
 # One required one (transaction_amount) and one optional one (last_transaction)
 # The optional one is optional because it has a default value => [1]
-def add_transaction(recipient, sender = owner, amount=1.0):
+def add_transaction(recipient, sender=owner, amount=1.0):
     """Append a new value as well as the last blockchain value to the blockchain.
 
     Arguments:
@@ -27,7 +32,13 @@ def add_transaction(recipient, sender = owner, amount=1.0):
 
 
 def mine_block():
-    pass
+    last_block = blockchain[-1]
+    block = {
+        "previous_hash": "XYZ",
+        "index": len(blockchain),
+        "transactions": open_transactions,
+    }
+    blockchain.append(block)
 
 
 def get_transaction_value():
