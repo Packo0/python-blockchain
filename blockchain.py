@@ -20,6 +20,10 @@ def get_balance(participant):
         [tx["amount"] for tx in block["transactions"] if tx["sender"] == participant]
         for block in blockchain
     ]
+    open_tx_sender = [
+        tx["amount"] for tx in open_transactions if tx["sender"] == participant
+    ]
+    tx_sender.append(open_tx_sender)
     amount_sent = 0
     for tx in tx_sender:
         if len(tx) > 0:
@@ -42,6 +46,11 @@ def get_last_blockchain_value():
     return blockchain[-1]
 
 
+def verify_transaction(transaction):
+    sender_balance = get_balance(transaction["sender"])
+    return sender_balance >= transaction["amount"]
+
+
 # This function accepts two arguments.
 # One required one (transaction_amount) and one optional one (last_transaction)
 # The optional one is optional because it has a default value => [1]
@@ -54,9 +63,12 @@ def add_transaction(recipient, sender=owner, amount=1.0):
       :amount: The amount of coins sent with the transaction (default = 1.0)
     """
     transaction = {"sender": sender, "recipient": recipient, "amount": amount}
-    open_transactions.append(transaction)
-    participants.add(sender)
-    participants.add(recipient)
+    if verify_transaction(transaction):
+        open_transactions.append(transaction)
+        participants.add(sender)
+        participants.add(recipient)
+        return True
+    return False
 
 
 def mine_block():
@@ -122,7 +134,10 @@ while waiting_for_input:
     if user_choice == "1":
         tx_data = get_transaction_value()
         recipient, amount = tx_data
-        add_transaction(recipient, amount=amount)
+        if add_transaction(recipient, amount=amount):
+            print("Added transaction!")
+        else:
+            print("Transaction failed!")
         print(open_transactions)
     elif user_choice == "2":
         if mine_block():
