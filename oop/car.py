@@ -6,6 +6,10 @@ class Car:
         self.top_speed = starting_top_speed
         self.warnings = []
 
+    def __repr__(self):
+        print("Printing...")
+        return 'Top Speed: {}, Wanrings: {}'.format(self.top_speed, len(self.warnings))
+
     def drive(self):
         print("I am driving but certainly not faster than {}".format(self.top_speed))
 
@@ -15,6 +19,8 @@ car1.drive()
 
 # Car.top_speed = 200
 car1.warnings.append("New warnings")
+print(car1.__dict__)
+print(car1)
 
 car2 = Car(200)
 car2.drive()
