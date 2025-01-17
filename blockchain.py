@@ -4,10 +4,10 @@ from collections import OrderedDict
 import json
 import pickle
 
-from hash_util import hash_block
+from utility.hash_util import hash_block
+from utility.verification import Verification
 from block import Block
 from transaction import Transaction
-from verification import Verification
 
 # The reward we give to miners (for creating a new block)
 MINING_REWARD = 10
