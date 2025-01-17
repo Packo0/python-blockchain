@@ -7,7 +7,7 @@ from utility.verification import Verification
 class Node:
     def __init__(self):
         # self.id = str(uuid4())
-        self.id = 'Max'
+        self.id = "Max"
         self.blockchain = Blockchain(self.id)
 
     def get_transaction_value(self):
@@ -22,7 +22,7 @@ class Node:
         return input("Your choice: ")
 
     def print_blockchain_elements(self):
-        """ Output all blocks of the blockchain """
+        """Output all blocks of the blockchain"""
         # Output the blockchain list to the console
         for block in self.blockchain.chain:
             print("Outputing Block")
@@ -71,9 +71,7 @@ class Node:
                 # Break out of the loop
                 break
             print(
-                "Balance of {}: {:6.2f}".format(
-                    self.id, self.blockchain.get_balance()
-                )
+                "Balance of {}: {:6.2f}".format(self.id, self.blockchain.get_balance())
             )
         else:
             print("User left!")
@@ -81,5 +79,8 @@ class Node:
 
 print("Done!")
 
-node = Node()
-node.listen_for_input()
+if __name__ == "__main__":
+    node = Node()
+    node.listen_for_input()
+
+print(__name__)
