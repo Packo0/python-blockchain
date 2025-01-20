@@ -53,9 +53,12 @@ class Wallet:
 
     @staticmethod
     def verify_transacation(transaction):
+        """Verify the sugnature of a transaction.
+
+        Arguments:
+            :transaction: The transaction that should be verified.
+        """
         print(transaction)
-        if transaction.sender == "MINING":
-            return True
         public_key = RSA.importKey(binascii.unhexlify(transaction.sender))
         verifier = PKCS1_v1_5.new(public_key)
         h = SHA256.new(
