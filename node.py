@@ -12,7 +12,7 @@ CORS(app)
 
 @app.route("/", methods=["GET"])
 def get_ui():
-    return send_from_directory('ui', 'node.html')
+    return send_from_directory("ui", "node.html")
 
 
 @app.route("/wallet", methods=["POST"])
@@ -144,6 +144,24 @@ def get_chain():
             tx.__dict__.copy() for tx in dict_block["transactions"]
         ]
     return jsonify(dict_chain), 200
+
+
+@app.route("/node", methods=["POST"])
+def add_node():
+    values = request.get_json()
+    if not values:
+        response = {"message": "No data attached."}
+        return jsonify(response), 400
+    if "node" not in values:
+        response = {"message": "No data found."}
+        return jsonify(response), 400
+    node = values["node"]
+    blockchain.add_peer_node(node)
+    response = {
+        "message": "Node added successfully.",
+        "all_nodes": blockchain.get_peer_nodes(),
+    }
+    return jsonify(response), 201
 
 
 if __name__ == "__main__":
