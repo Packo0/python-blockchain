@@ -17,15 +17,16 @@ print(__name__)
 
 
 class Blockchain:
-    def __init__(self, hosting_node_id):
+    def __init__(self, public_key, node_id):
         # Our starting block for the blockchain
         genesis_block = Block(0, "", [], 100, 0)
         # Initializing our (empty) blockchain list
         self.chain = [genesis_block]
         # Unhandled transactions
         self.__open_transactions = []
-        self.hosting_node = hosting_node_id
+        self.public_key = public_key
         self.__peer_nodes = set()
+        self.node_id = node_id
         self.load_data()
 
     @property
@@ -42,7 +43,7 @@ class Blockchain:
     def load_data(self):
         """Initialize blockchain + open transactions data from a file."""
         try:
-            with open("blockchain.txt", mode="r") as f:
+            with open("blockchain-{}.txt".format(self.node_id), mode="r") as f:
                 # file_content = pickle.loads(f.read())
                 file_content = f.readlines()
 
@@ -83,7 +84,7 @@ class Blockchain:
 
     def save_data(self):
         try:
-            with open("blockchain.txt", mode="w") as f:
+            with open("blockchain-{}.txt".format(self.node_id), mode="w") as f:
                 saveable_chain = [
                     block.__dict__
                     for block in [
@@ -122,9 +123,9 @@ class Blockchain:
 
     def get_balance(self):
         """Calculate and return the balance for a participant."""
-        if self.hosting_node == None:
+        if self.public_key == None:
             return None
-        participant = self.hosting_node
+        participant = self.public_key
         tx_sender = [
             [tx.amount for tx in block.transactions if tx.sender == participant]
             for block in self.__chain
@@ -171,7 +172,7 @@ class Blockchain:
         :amount: The amount of coins sent with the transaction (default = 1.0)
         """
         # transaction = {"sender": sender, "recipient": recipient, "amount": amount}
-        if self.hosting_node == None:
+        if self.public_key == None:
             return False
         transaction = Transaction(sender, recipient, signature, amount)
         if Verification.verify_transaction(transaction, self.get_balance):
@@ -182,7 +183,7 @@ class Blockchain:
 
     def mine_block(self):
         """Create a new block and add open transactions to it."""
-        if self.hosting_node == None:
+        if self.public_key == None:
             return None
         # Fetch the currently last block of the blockchain
         last_block = self.__chain[-1]
@@ -194,7 +195,7 @@ class Blockchain:
         #     "recipient": owner,
         #     "amount": MINING_REWARD,
         # }
-        reward_transaction = Transaction("MINING", self.hosting_node, "", MINING_REWARD)
+        reward_transaction = Transaction("MINING", self.public_key, "", MINING_REWARD)
         copied_transactions = self.__open_transactions[:]
         for tx in copied_transactions:
             if not Wallet.verify_transacation(tx):
