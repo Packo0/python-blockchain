@@ -124,7 +124,7 @@ class Blockchain:
 
     def get_balance(self, sender=None):
         """Calculate and return the balance for a participant."""
-        if sender ==None:
+        if sender == None:
             if self.public_key == None:
                 return None
             participant = self.public_key
@@ -167,7 +167,9 @@ class Blockchain:
     # This function accepts two arguments.
     # One required one (transaction_amount) and one optional one (last_transaction)
     # The optional one is optional because it has a default value => [1]
-    def add_transaction(self, recipient, sender, signature, amount=1.0, is_receiving=False):
+    def add_transaction(
+        self, recipient, sender, signature, amount=1.0, is_receiving=False
+    ):
         """Append a new value as well as the last blockchain value to the blockchain.
 
         Arguments:
@@ -229,6 +231,28 @@ class Blockchain:
         self.__open_transactions = []
         self.save_data()
         return block
+
+    def add_block(self, block):
+        transactions = [
+            Transaction(tx["sender"], tx["recipient"], tx["signature"], tx["amount"])
+            for tx in block["transaction"]
+        ]
+        proof_is_valid = Verification.valid_proof(
+            transactions, block["previous_hash"], block["proof"]
+        )
+        hashes_match = hash_block(self.chain[-1]) == block["previous_hash"]
+        if not proof_is_valid or hashes_match:
+            return False
+        converted_block = Block(
+            block["index"],
+            block["previous_has"],
+            transactions,
+            block["proof"],
+            block["timestamp"],
+        )
+        self.__chain.append(converted_block)
+        self.save_data()
+        return True
 
     def add_peer_node(self, node):
         """Adds a new node to the peer node set.
