@@ -6,6 +6,13 @@ from wallet import Wallet
 
 
 class Node:
+    """The node which runs the local blockchain instance.
+
+    Attributes:
+        :id: The id of the node.
+        :blockchain: The blockchain which is run by this node.
+    """
+
     def __init__(self):
         # self.id = str(uuid4())
         self.wallet = Wallet()
@@ -13,28 +20,32 @@ class Node:
         self.blockchain = Blockchain(self.wallet.public_key)
 
     def get_transaction_value(self):
-        """Returns the input of the user (a new transaction amount) as a float"""
-        # Get the use input, transform it from a string to a float and store it
+        """Returns the input of the user (a new transaction amount) as a float."""
+        # Get the user input, transform it from a string to a float and store it in user_input
         tx_recipient = input("Enter the recipient of the transaction: ")
         tx_amount = float(input("Your transaction amount please: "))
         return tx_recipient, tx_amount
 
     def get_user_choice(self):
         """Prompts the user for its choice and return it."""
-        return input("Your choice: ")
+        user_input = input("Your choice: ")
+        return user_input
 
     def print_blockchain_elements(self):
-        """Output all blocks of the blockchain"""
+        """Output all blocks of the blockchain."""
         # Output the blockchain list to the console
         for block in self.blockchain.chain:
-            print("Outputing Block")
+            print("Outputting Block")
             print(block)
         else:
             print("-" * 20)
 
     def listen_for_input(self):
+        """Starts the node and waits for user input."""
         waiting_for_input = True
 
+        # A while loop for the user input interface
+        # It's a loop that exits once waiting_for_input becomes False or when break is called
         while waiting_for_input:
             print("Please choose")
             print("1: Add a new transaction value")
@@ -81,6 +92,7 @@ class Node:
             elif user_choice == "7":
                 self.wallet.save_keys()
             elif user_choice == "q":
+                # This will lead to the loop to exist because it's running condition becomes False
                 waiting_for_input = False
             else:
                 print("Input was invalid, please pick a value from the list!")
@@ -97,11 +109,9 @@ class Node:
         else:
             print("User left!")
 
+        print("Done!")
 
-print("Done!")
 
 if __name__ == "__main__":
     node = Node()
     node.listen_for_input()
-
-print(__name__)

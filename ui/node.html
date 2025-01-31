@@ -191,7 +191,9 @@
             >
               Mine Coins
             </button>
-            <button class="btn btn-warning" @click="onResolve">Resolve conflicts</button>
+            <button class="btn btn-warning" @click="onResolve">
+              Resolve Conflicts
+            </button>
           </div>
         </div>
         <div class="row">
@@ -308,9 +310,13 @@
             this.walletLoading = true;
             axios
               .post('/wallet')
-              .then((response) => {
+              .then(function (response) {
                 vm.error = null;
-                vm.success = `Created Wallet! Public Key: ${response.data.public_key}, Private Key: ${response.data.private_key}`;
+                vm.success =
+                  'Created Wallet! Public Key: ' +
+                  response.data.public_key +
+                  ', Private Key: ' +
+                  response.data.private_key;
                 vm.wallet = {
                   public_key: response.data.public_key,
                   private_key: response.data.private_key,
@@ -318,7 +324,7 @@
                 vm.funds = response.data.funds;
                 vm.walletLoading = false;
               })
-              .catch((error) => {
+              .catch(function (error) {
                 vm.success = null;
                 vm.error = error.response.data.message;
                 vm.wallet = null;
@@ -331,9 +337,13 @@
             this.walletLoading = true;
             axios
               .get('/wallet')
-              .then((response) => {
+              .then(function (response) {
                 vm.error = null;
-                vm.success = `Created Wallet! Public Key: ${response.data.public_key}, Private Key: ${response.data.private_key}`;
+                vm.success =
+                  'Created Wallet! Public Key: ' +
+                  response.data.public_key +
+                  ', Private Key: ' +
+                  response.data.private_key;
                 vm.wallet = {
                   public_key: response.data.public_key,
                   private_key: response.data.private_key,
@@ -341,7 +351,7 @@
                 vm.funds = response.data.funds;
                 vm.walletLoading = false;
               })
-              .catch((error) => {
+              .catch(function (error) {
                 vm.success = null;
                 vm.error = error.response.data.message;
                 vm.wallet = null;
@@ -357,14 +367,14 @@
                 recipient: this.outgoingTx.recipient,
                 amount: this.outgoingTx.amount,
               })
-              .then((response) => {
+              .then(function (response) {
                 vm.error = null;
                 vm.success = response.data.message;
                 console.log(response.data);
                 vm.funds = response.data.funds;
                 vm.txLoading = false;
               })
-              .catch((error) => {
+              .catch(function (error) {
                 vm.success = null;
                 vm.error = error.response.data.message;
                 vm.txLoading = false;
@@ -374,13 +384,13 @@
             var vm = this;
             axios
               .post('/mine')
-              .then((response) => {
+              .then(function (response) {
                 vm.error = null;
                 vm.success = response.data.message;
                 console.log(response.data);
                 vm.funds = response.data.funds;
               })
-              .catch((error) => {
+              .catch(function (error) {
                 vm.success = null;
                 vm.error = error.response.data.message;
               });
@@ -389,11 +399,11 @@
             var vm = this;
             axios
               .post('/resolve-conflicts')
-              .then((response) => {
+              .then(function (response) {
                 vm.error = null;
                 vm.success = response.data.message;
               })
-              .catch((error) => {
+              .catch(function (error) {
                 vm.success = null;
                 vm.error = error.response.data.message;
               });
@@ -405,26 +415,25 @@
               this.dataLoading = true;
               axios
                 .get('/chain')
-                .then((response) => {
+                .then(function (response) {
                   vm.blockchain = response.data;
-                  this.dataLoading = false;
+                  vm.dataLoading = false;
                 })
-                .catch((error) => {
-                  this.dataLoading = false;
+                .catch(function (error) {
+                  vm.dataLoading = false;
                   vm.error = 'Something went wrong.';
                 });
             } else {
               // Load transaction data
               var vm = this;
-              this.dataLoading = true;
               axios
                 .get('/transactions')
-                .then((response) => {
+                .then(function (response) {
                   vm.openTransactions = response.data;
-                  this.dataLoading = false;
+                  vm.dataLoading = false;
                 })
-                .catch((error) => {
-                  this.dataLoading = false;
+                .catch(function (error) {
+                  vm.dataLoading = false;
                   vm.error = 'Something went wrong.';
                 });
             }
